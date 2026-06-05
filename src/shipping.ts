@@ -30,16 +30,16 @@ const openai = new OpenAI({
      return response.choices[0].message.content ;
  }
 
-export function rankRates(rates: Array<object>, preference: Array<object>) {
-    const prices = rates.map(r => r.price);
-    const times = rates.map(r => r.days);
+// export function rankRates(rates: Array<object>, preference: Array<object>) {
+//     const prices = rates.map(r => r.price);
+//     const times = rates.map(r => r.days);
 
-    return rates
-        .map(r => ({
-            ...r,
-            score:
-                preference.price * (1 / r.price) +
-                preference.speed * (1 / r.days),
-        }))
-        .sort((a, b) => b.score - a.score);
-}
+//     return rates
+//         .map(r => ({
+//             ...r,
+//             score:
+//                 preference.price * (1 / r.price) +
+//                 preference.speed * (1 / r.days),
+//         }))
+//         .sort((a, b) => b.score - a.score);
+// }
