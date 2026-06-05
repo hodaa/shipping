@@ -1,4 +1,5 @@
 import  dotenv from "dotenv"
+import { time } from "node:console";
 import OpenAI from "openai"
 
 dotenv.config();
@@ -30,16 +31,32 @@ const openai = new OpenAI({
      return response.choices[0].message.content ;
  }
 
-// export function rankRates(rates: Array<object>, preference: Array<object>) {
-//     const prices = rates.map(r => r.price);
-//     const times = rates.map(r => r.days);
+function normalize(value: number, minValue: number, mixValue: number) {
+    return (value - minValue) / (mixValue - minValue);
+}
 
-//     return rates
-//         .map(r => ({
-//             ...r,
-//             score:
-//                 preference.price * (1 / r.price) +
-//                 preference.speed * (1 / r.days),
-//         }))
-//         .sort((a, b) => b.score - a.score);
-// }
+
+type rank = {
+    price: number,
+    time: number
+}
+
+export function rankCouriers(couriers: Array<rank>, preferences: rank) {
+
+    const prices = couriers.map(c => c.price);
+    const times = couriers.map(c => c.time);
+
+
+    const minPrice = Math.min(...prices);
+    const maxPrice = Math.max(...prices);
+
+    return couriers.map(courier => {
+
+        const bestPrice = 1 - normalize(courier.price, minPrice, maxPrice);
+        const bestTime = 1 - normalize(courier.time, minPrice, maxPrice);
+
+        const score = bestPrice * preferences.price + bestTime * preferences.time;
+
+        return { ...courier, score }
+    }).sort((a, b) => b.score - a.score)
+}
