@@ -15,6 +15,6 @@ app.post("/ship", async (req, res) => {
 });
 
 
-const server = app.listen(3000, () => {
+const server = app.listen(3000, '0.0.0.0', () => {
     console.log("server started");
 });
